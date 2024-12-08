@@ -5,6 +5,7 @@
   "type": "module",
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
+    "@emailjs/browser": "^4.4.1",
     "@google/generative-ai": "^0.21.0",
     "@refinedev/antd": "^5.44.0",
     "@refinedev/cli": "^2.16.21",

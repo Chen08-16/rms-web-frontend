@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Card, Typography, Input, Button, Upload, Form, message, DatePicker, Modal } from "antd";
+import { Card, Typography, Input, Button, Upload, message, DatePicker, Modal } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { useGetIdentity } from "@refinedev/core";
+import axios from "axios";
 
 const { Title, Text } = Typography;
 
 export const Profile = () => {
-  const { data:user } = useGetIdentity<{
-    email: string;
-    
-  }>();
+  const { data: user } = useGetIdentity();
 
   const [profile, setProfile] = useState({
     username: "",
@@ -20,23 +18,58 @@ export const Profile = () => {
     profileImage: null,
   });
 
-  // Update profile when user data is loaded
+  const [loading, setLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const fetchUser = async () => {
+    try {
+      setLoading(true);
+      const data = {
+        username: user?.name || "",
+        uid: user?.id,
+        email: user?.email || "",
+        phone: user?.phoneNumber || "",
+        dob: "",
+      };
+      const response = await axios.post(
+        `http://localhost:3000/api/profile/user/getProfile/${user?.id}`,
+        data
+      );
+      const userData = response.data.user;
+      setProfile({
+        username: userData.username || "",
+        phone: userData.phone || "",
+        email: userData.email || "",
+        dob: userData.dob ? moment(userData.dob) : null,
+        profileImage: userData.profileImage || null,
+      });
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (user?.email) {
-      setProfile(prev => ({
-        ...prev,
-        email: user.email
-      }));
-      
-      // Update form with email
-      form.setFieldsValue({
-        email: user.email
-      });
+      fetchUser();
     }
   }, [user]);
 
-  const [form] = Form.useForm();
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProfile((prevProfile) => ({
+      ...prevProfile,
+      [name]: value,
+    }));
+  };
+
+  const handleDateChange = (date) => {
+    setProfile((prevProfile) => ({
+      ...prevProfile,
+      dob: date,
+    }));
+  };
 
   const handleImageUpload = (info) => {
     if (info.file.status === "done") {
@@ -48,16 +81,24 @@ export const Profile = () => {
     }
   };
 
-  const handleUpdateProfile = (values) => {
-    setProfile((prevProfile) => ({
-      ...prevProfile,
-      username: values.username,
-      phone: values.phone,
-      email: values.email,
-      dob: values.dob ? values.dob.format("YYYY-MM-DD") : null,
-    }));
-    setIsModalVisible(true); // Show success modal
-  };
+  const handleSubmit = async () => {
+    try {
+        const updatedProfile = {
+            ...profile,
+            uid:user?.id,
+            email:user?.email,
+            dob: profile.dob ? profile.dob.format("YYYY-MM-DD") : null, // Format date
+        };
+
+        const response = await axios.put("http://localhost:3000/api/profile/user", updatedProfile);
+       
+        message.success("Profile updated successfully!");
+        setIsModalVisible(true); // Show success modal
+    } catch (error) {
+        console.error("Error updating profile:", error);
+        message.error("Failed to update profile. Please try again.");
+    }
+};
 
   const handleModalClose = () => {
     setIsModalVisible(false);
@@ -97,7 +138,7 @@ export const Profile = () => {
             <img
               src={profile.profileImage}
               alt="Profile"
-              style={{ width: "100%", height: "100%", objectFit: "cover",  }}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           ) : (
             <>
@@ -122,63 +163,46 @@ export const Profile = () => {
           )}
         </div>
 
-        {/* Profile Form */}
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleUpdateProfile}
-          initialValues={{
-            username: profile.username,
-            phone: profile.phone,
-            email: profile.email,
-            dob: profile.dob ? moment(profile.dob, "YYYY-MM-DD") : null,
-          }}
-        >
-          <Form.Item
+        {/* Profile Fields */}
+        <div style={{ marginBottom: 16 }}>
+          <label>Username:</label>
+          <Input
             name="username"
-            label={<Text strong>Username</Text>}
-            rules={[{ required: true, message: "Please enter your username!" }]}
-          >
-            <Input placeholder="Enter your username" />
-          </Form.Item>
-
-          <Form.Item
-            name="phone"
-            label={<Text strong>Phone Number</Text>}
-            rules={[{ required: true, message: "Please enter your phone number!" }]}
-          >
-            <Input placeholder="Enter your phone number" />
-          </Form.Item>
-
-          <Form.Item
+            value={profile.username}
+            onChange={handleChange}
+            placeholder="Enter your username"
+          />
+        </div>
+        <div style={{ marginBottom: 16 }}>
+          <label>Email:</label>
+          <Input
             name="email"
-            label={<Text strong>Email Address</Text>}
-            rules={[
-              { required: true, message: "Please enter your email!" },
-              { type: "email", message: "Please enter a valid email!" },
-            ]}
-          >
-            <Input 
-              placeholder="Enter your email address" 
-              disabled 
-              defaultValue={user?.email || ''}
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="dob"
-            label={<Text strong>Date-of-Birth</Text>}
-            rules={[{ required: true, message: "Please select your date of birth!" }]}
-          >
-            <DatePicker style={{ width: "100%" }} format="YYYY-MM-DD" />
-          </Form.Item>
-
-          <Form.Item>
-            <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
-              Update Profile
-            </Button>
-          </Form.Item>
-        </Form>
+            value={profile.email}
+            onChange={handleChange}
+            placeholder="Enter your email"
+            disabled
+          />
+        </div>
+        <div style={{ marginBottom: 16 }}>
+          <label>Phone:</label>
+          <Input
+            name="phone"
+            value={profile.phone}
+            onChange={handleChange}
+            placeholder="Enter your phone number"
+          />
+        </div>
+        <div style={{ marginBottom: 16 }}>
+          <label>Date of Birth:</label>
+          <DatePicker
+            value={profile.dob}
+            onChange={handleDateChange}
+            style={{ width: "100%" }}
+          />
+        </div>
+        <Button type="primary" onClick={handleSubmit} loading={loading}>
+          Submit
+        </Button>
       </Card>
 
       {/* Success Modal */}

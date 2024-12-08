@@ -178,18 +178,19 @@ export const authProvider: AuthProvider = {
         });
     },
 
-
     getIdentity: async () => {
         
         const user = auth?.currentUser;
 
         if (user) {
-            const { uid, displayName, email, photoURL } = user;
+            const { uid, displayName, email, photoURL,phoneNumber} = user;
             return {
                 id: uid,
                 name: displayName || email,
                 email: email,
                 avatar: photoURL,
+                phoneNumber:phoneNumber,
+                
             };
         }
 

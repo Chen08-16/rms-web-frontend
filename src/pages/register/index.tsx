@@ -21,9 +21,6 @@ export const Register = () => {
   )
 };
 
-
-
-
 export const useSignup = () => {
   const navigate = useNavigate();
 
