@@ -56,7 +56,7 @@ export const Menu = () => {
       <Title level={2} style={{ textAlign: 'center', marginBottom: '20px' }}>Food Menu</Title>
 
       {/* Add New Item Button */}
-      <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+      <div style={{ marginBottom: '20px', marginBottom: '20px', textAlign: 'right' }}>
         <Button type="primary" onClick={() => setIsAddModalOpen(true)}>
           Add New Item
         </Button>

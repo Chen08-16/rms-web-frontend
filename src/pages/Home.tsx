@@ -56,7 +56,7 @@ export const Home = () => {
 
         {/* Buttons: Order Now and Reserve Now */}
         <div style={{ padding: "20px", textAlign: "center" }}>
-        <Link to="/Order">
+        <Link to="/Menu">
           <Button 
             type="primary" 
             size="large" 

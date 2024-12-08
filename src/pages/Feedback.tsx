@@ -45,81 +45,11 @@ export const Feedback = () => {
           >
             <Form.Item
               name="name"
-              label={<Text strong>Name</Text>}
+              label={<Text strong>Username</Text>}
               rules={[{ required: true, message: "Please enter your name" }]}
             >
               <Input placeholder="Enter your name" />
             </Form.Item>
-
-            <Form.Item
-              name="email"
-              label={<Text strong>Email</Text>}
-              rules={[
-                { required: true, message: "Please enter your email" },
-                { type: "email", message: "Please enter a valid email" },
-              ]}
-            >
-              <Input placeholder="Enter your email" />
-            </Form.Item>
-
-            <Form.Item
-              name="phone"
-              label={<Text strong>Phone Number</Text>}
-              rules={[{ required: true, message: "Please enter your phone number" }]}
-            >
-              <Input placeholder="Enter your phone number" />
-            </Form.Item>
-
-            <Form.Item label={<Text strong>Dine in/Take Out</Text>}>
-              <Switch checkedChildren="Dine In" unCheckedChildren="Take Out" />
-            </Form.Item>
-
-            <Form.Item label={<Text strong>Day Visited</Text>}>
-              <Row gutter={[16, 16]}>
-                <Col xs={24} sm={8}>
-                  <Form.Item
-                    name="date"
-                    rules={[{ required: true, message: "Please select a date" }]}
-                  >
-                    <DatePicker placeholder="Select date" style={{ width: "100%" }} />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={8}>
-                  <Form.Item
-                    name="time"
-                    rules={[{ required: true, message: "Please select a time" }]}
-                  >
-                    <TimePicker placeholder="Select time" format="HH:mm" style={{ width: "100%" }} />
-                  </Form.Item>
-                </Col>
-                <Col xs={24} sm={8}>
-                  <Form.Item
-                    name="ampm"
-                    rules={[{ required: true, message: "Please select AM/PM" }]}
-                  >
-                    <Select placeholder="AM/PM">
-                      <Option value="AM">AM</Option>
-                      <Option value="PM">PM</Option>
-                    </Select>
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Form.Item>
-
-            {["Food Quality", "Overall Service Quality", "Order Accuracy", "Speed of Service", "Overall Experience"].map(
-              (title) => (
-                <Form.Item label={<Text strong>{title}</Text>} key={title}>
-                  <Switch style={{ marginRight: "10px" }} />
-                  <Text>Excellent</Text>
-                  <Switch style={{ margin: "0 10px" }} />
-                  <Text>Good</Text>
-                  <Switch style={{ margin: "0 10px" }} />
-                  <Text>Average</Text>
-                  <Switch style={{ margin: "0 10px" }} />
-                  <Text>Dissatisfied</Text>
-                </Form.Item>
-              )
-            )}
 
             <Form.Item
               name="comments"

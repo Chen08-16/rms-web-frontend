@@ -5,6 +5,7 @@
   "type": "module",
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
+    "@google/generative-ai": "^0.21.0",
     "@refinedev/antd": "^5.44.0",
     "@refinedev/cli": "^2.16.21",
     "@refinedev/core": "^4.47.1",
@@ -14,6 +15,7 @@
     "@refinedev/simple-rest": "^5.0.1",
     "antd": "^5.17.0",
     "axios": "^1.7.9",
+    "color-mode": "^0.1.0",
     "firebase": "^11.0.2",
     "flag-icon-css": "^4.1.7",
     "moment": "^2.30.1",

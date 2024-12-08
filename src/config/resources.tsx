@@ -1,4 +1,4 @@
-import { AppstoreOutlined, BookOutlined, CommentOutlined, HomeOutlined, QuestionCircleOutlined, ShopOutlined, ShoppingCartOutlined, SolutionOutlined, UserOutlined} from "@ant-design/icons";
+import { BookOutlined, CommentOutlined, HomeOutlined, QuestionCircleOutlined, ShopOutlined, ShoppingCartOutlined, SolutionOutlined, UserOutlined} from "@ant-design/icons";
 import { IResourceItem } from "@refinedev/core";
 
 export const resources:IResourceItem[] = [
@@ -45,14 +45,6 @@ export const resources:IResourceItem[] = [
         meta:{
             label:'Reservation',
             icon:<BookOutlined />
-        }
-    },
-    {
-        name:'TableInfo',
-        list:'/tableinfo',
-        meta:{
-            label:'Table Info',
-            icon:<AppstoreOutlined />
         }
     },
     {

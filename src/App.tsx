@@ -25,7 +25,6 @@ import { Profile } from "./pages/Profile";
 import { Reservation } from "./pages/Reservation";
 import { Chat } from "./pages/Chat";
 import { Feedback } from "./pages/Feedback";
-import { TableInfo } from "./pages/Table";
 import { Order } from "./pages/Order";
 import { FAQ } from "./pages/FAQ";
 
@@ -90,7 +89,6 @@ function App() {
                                         <Route path="/Menu" index element={<Menu />} /> 
                                         <Route path="/Order" index element={<Order />} />  
                                         <Route path="/Reservation" index element={<Reservation />} />  
-                                        <Route path="/TableInfo" index element={<TableInfo/>} /> 
                                         <Route path="/Feedback" index element={<Feedback />} /> 
                                         <Route path="/Chat" index element={<Chat />} /> 
                                         <Route path="/FAQ" index element={<FAQ />} /> 
