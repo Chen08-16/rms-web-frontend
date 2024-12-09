@@ -3,10 +3,10 @@ import { Input, Button, List, message, theme } from "antd";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { ColorModeContext } from "../contexts/color-mode";
 
-const genAI = new GoogleGenerativeAI("AIzaSyB01r8rP_oqc4oW5EjngH9578G7ytHT3LA");
+const genAI = new GoogleGenerativeAI("AIzaSyAscgNcTNL29mAwOJHIRU2c233NzBQoqLY");
 
 interface ChatMessage {
-  sender: "User" | "Bot";
+  sender: "User" | "BistroBuddy";
   content: string;
   timestamp?: number;
 }
@@ -29,7 +29,7 @@ export const Chat = () => {
 
   const handleSendMessage = async () => {
     if (!userMessage.trim()) return;
-
+  
     const newMessage: ChatMessage = { 
       sender: "User", 
       content: userMessage,
@@ -37,7 +37,7 @@ export const Chat = () => {
     };
     setMessages((prev) => [...prev, newMessage]);
     setIsLoading(true);
-
+  
     try {
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
       const chat = model.startChat({
@@ -49,12 +49,45 @@ export const Chat = () => {
           topK: 16,
         },
       });
-
-      const result = await chat.sendMessage(userMessage);
+  
+      // Expanded custom prompt
+      const customPrompt = `
+        You are BistroBuddy, the chatbot assistant for a restaurant. Answer user queries precisely and politely based on the provided context.
+  
+        **Restaurant Opening Hours:**
+        - Sunday: 10:00 AM – 10:00 PM
+        - Monday: 10:00 AM – 10:00 PM
+        - Tuesday: Closed
+        - Wednesday: 10:00 AM – 10:00 PM
+        - Thursday: 10:00 AM – 10:00 PM
+        - Friday: 10:00 AM – 11:00 PM
+        - Saturday: 10:00 AM – 11:00 PM
+  
+        **Menu and Cuisine:**
+        Our restaurant specializes in Western and Asian fusion cuisine, featuring dishes like pasta, burgers, sushi, and signature rice bowls. We also cater to diverse dietary needs with vegetarian and gluten-free options.
+  
+        **Location:**
+        You can find us at 123 Fusion Lane, Georgetown, Penang, Malaysia.
+  
+        **Payment Methods:**
+        We accept multiple payment methods:
+        - Cash
+        - Credit/Debit Cards (Visa, MasterCard, AmEx)
+        - E-wallet Payments (GrabPay, Touch 'n Go)
+  
+        **Data Security:**
+        Absolutely. We employ industry-standard encryption to protect your personal and payment information. Our systems comply with all relevant data protection regulations to ensure your data remains secure.
+  
+        If the user asks about opening hours, menu, location, payment, or data security, reply with the context above. For other queries, respond with general assistance or say, "I'm sorry, I don't have that information right now."
+  
+        User Question: ${userMessage}
+      `;
+  
+      const result = await chat.sendMessage(customPrompt);
       const response = await result.response;
       
       setMessages((prev) => [...prev, { 
-        sender: "Bot", 
+        sender: "BistroBuddy", 
         content: response.text(),
         timestamp: Date.now()
       }]);
@@ -118,7 +151,7 @@ export const Chat = () => {
         renderItem={(message) => (
           <List.Item
             style={{
-              backgroundColor: message.sender === "Bot" 
+              backgroundColor: message.sender === "BistroBuddy" 
                 ? token.colorBgTextHover 
                 : token.colorBgContainer,
               padding: "12px",
@@ -135,7 +168,7 @@ export const Chat = () => {
                 marginBottom: '4px'
               }}>
                 <strong style={{ 
-                  color: message.sender === "Bot" 
+                  color: message.sender === "BistroBuddy" 
                     ? token.colorPrimary 
                     : token.colorSuccess
                 }}>

@@ -58,7 +58,7 @@ function App() {
                                         <Authenticated key="authenticated-layout" fallback={<Login />} redirectOnFail="/login">
                                             <ThemedLayoutV2  
                                                 Title={(props) => (
-                                                    <ThemedTitleV2 {...props} text="RMS-Web" />
+                                                    <ThemedTitleV2 {...props} text="Restaurant Mangement System" />
                                                 )}
 
                                                 // Header={() => (
