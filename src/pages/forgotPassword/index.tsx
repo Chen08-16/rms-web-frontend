@@ -1,107 +1,122 @@
-import React, { useRef } from "react";
-import { Form, Input, Button, Typography, Card, message } from "antd";
-import emailjs from "@emailjs/browser";
+import React from "react";
+import { Form, Input, Button, Typography } from "antd";
+import { useForgotPassword } from "@refinedev/core";
+import { useNavigate } from "react-router-dom";
+import R_Wallpaper_2 from "../../images/R_Wallpaper_2.jpg";
 
 const { Title, Text } = Typography;
 
-export const Feedback = () => {
-  const formRef = useRef();
+export const ForgotPassword = () => {
+  const { mutate: forgotPassword, isLoading } = useForgotPassword();
+  const navigate = useNavigate();
 
-  const sendEmail = (values) => {
-    const { from_name, from_email, messageContent: feedbackMessage } = values;
-    emailjs
-      .send(
-        "service_qy3xkug", // Replace with your Service ID
-        "template_3byf62e", // Replace with your Template ID
-        {
-          from_name,
-          from_email,
-          message: feedbackMessage,
-        },
-        "br7yLMO422SzZtVrC" // Replace with your Public Key
-      )
-      .then(
-        () => {
-          message.success("Feedback submitted successfully!");
-          formRef.current.resetFields(); // Reset the form
-        },
-        (error) => {
-          console.error("Error:", error.text);
-          message.error("Failed to submit feedback. Please try again.");
-        }
-      );
+  const handleSignInNavigation = () => {
+    navigate("/login");
+  };
+
+  const onFinish = (values) => {
+    forgotPassword({ email: values.email });
   };
 
   return (
     <div
       style={{
-        padding: "40px",
+        backgroundImage: `url(${R_Wallpaper_2})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
-        alignItems: "flex-start", // Align content to the top
-        minHeight: "100vh",
-        backgroundColor: "#f0f2f5",
+        alignItems: "center",
+        flexDirection: "column",
+        padding: "20px",
       }}
     >
+      {/* Panel for Title */}
       <div
         style={{
-          width: "100%",
-          maxWidth: "600px",
+          background: "rgba(0, 0, 0, 0.6)",
+          padding: "10px 20px",
+          borderRadius: "8px",
+          marginBottom: "20px",
+          textAlign: "center",
         }}
       >
-        <Title level={2} style={{ textAlign: "center", marginBottom: "20px", color: "#333" }}>
-          Customer Feedback Form
+        <Title level={1} style={{ color: "white", margin: 0 }}>
+          Password Recovery
         </Title>
+      </div>
 
-        <Card
+      {/* Forgot Password Form Panel */}
+      <div
+        style={{
+          background: "rgba(0, 0, 0, 0.8)",
+          padding: "30px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+          width: "100%",
+          maxWidth: "500px",
+        }}
+      >
+        <Title
+          level={2}
           style={{
-            padding: "20px",
-            borderRadius: "10px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            textAlign: "center",
+            color: "#fff",
+            marginBottom: "20px",
           }}
         >
-          <Title level={3} style={{ textAlign: "center", marginBottom: "20px" }}>
-            We Value Your Feedback!
-          </Title>
-          <Text style={{ textAlign: "center", display: "block", marginBottom: "30px" }}>
-            Share your thoughts with us to help improve your experience.
-          </Text>
-          <Form
-            layout="vertical"
-            ref={formRef} // Attach form reference
-            onFinish={sendEmail} // Use Ant Design's onFinish for form submission
+          Reset Your Password
+        </Title>
+        <Text
+          style={{
+            display: "block",
+            marginBottom: "20px",
+            textAlign: "center",
+            color: "#aaa",
+          }}
+        >
+          Please enter your email address to receive a password reset link.
+        </Text>
+
+        {/* Forgot Password Form */}
+        <Form layout="vertical" onFinish={onFinish}>
+          <Form.Item
+            name="email"
+            label={<Text style={{ color: "#fff" }}>Email Address</Text>}
+            rules={[
+              { required: true, message: "Please input your email!" },
+              { type: "email", message: "Please enter a valid email!" },
+            ]}
           >
-            <Form.Item
-              label={<Text strong>Name</Text>}
-              name="from_name"
-              rules={[{ required: true, message: "Please enter your name!" }]}
-            >
-              <Input placeholder="Your Name" />
-            </Form.Item>
-            <Form.Item
-              label={<Text strong>Email</Text>}
-              name="from_email"
-              rules={[
-                { required: true, message: "Please enter your email!" },
-                { type: "email", message: "Please enter a valid email!" },
-              ]}
-            >
-              <Input placeholder="Your Email" />
-            </Form.Item>
-            <Form.Item
-              label={<Text strong>Comment</Text>}
-              name="messageContent"
-              rules={[{ required: true, message: "Please provide your feedback!" }]}
-            >
-              <Input.TextArea rows={4} placeholder="Type your feedback here..." />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
-                Submit Feedback
-              </Button>
-            </Form.Item>
-          </Form>
-        </Card>
+            <Input placeholder="Enter your email" />
+          </Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={isLoading}
+            block
+            style={{ marginTop: "20px" }}
+          >
+            Send Reset Link
+          </Button>
+        </Form>
+
+        {/* Sign In Navigation Link */}
+        <Text
+          style={{
+            display: "block",
+            marginTop: "30px",
+            textAlign: "center",
+            color: "#fff",
+            cursor: "pointer",
+            textDecoration: "underline",
+          }}
+          onClick={handleSignInNavigation}
+        >
+          Have an account? Sign in
+        </Text>
       </div>
     </div>
   );
